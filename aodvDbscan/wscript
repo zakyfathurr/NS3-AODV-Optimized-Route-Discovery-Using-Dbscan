@@ -1,0 +1,48 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    module = bld.create_ns3_module('aodvDbscan', ['internet', 'wifi'])
+    module.includes = '.'
+    module.source = [
+        'model/aodvDbscan-id-cache.cc',
+        'model/aodvDbscan-dpd.cc',
+        'model/aodvDbscan-rtable.cc',
+        'model/aodvDbscan-rqueue.cc',
+        'model/aodvDbscan-packet.cc',
+        'model/aodvDbscan-neighbor.cc',
+        'model/aodvDbscan-routing-protocol.cc',
+        'helper/aodvDbscan-helper.cc',
+        ]
+
+    aodvDbscan_test = bld.create_ns3_module_test_library('aodvDbscan')
+    aodvDbscan_test.source = [
+        'test/aodvDbscan-id-cache-test-suite.cc',
+        'test/aodvDbscan-test-suite.cc',
+        'test/aodvDbscan-regression.cc',
+        'test/bug-772.cc',
+        'test/loopback.cc',
+        ]
+
+    # Tests encapsulating example programs should be listed here
+    if (bld.env['ENABLE_EXAMPLES']):
+        aodvDbscan_test.source.extend([
+        #   'test/aodvDbscan-examples-test-suite.cc',
+            ])
+    
+    headers = bld(features='ns3header')
+    headers.module = 'aodvDbscan'
+    headers.source = [
+        'model/aodvDbscan-id-cache.h',
+        'model/aodvDbscan-dpd.h',
+        'model/aodvDbscan-rtable.h',
+        'model/aodvDbscan-rqueue.h',
+        'model/aodvDbscan-packet.h',
+        'model/aodvDbscan-neighbor.h',
+        'model/aodvDbscan-routing-protocol.h',
+        'helper/aodvDbscan-helper.h',
+        ]
+
+    if bld.env['ENABLE_EXAMPLES']:
+        bld.recurse('examples')
+
+    bld.ns3_python_bindings()
